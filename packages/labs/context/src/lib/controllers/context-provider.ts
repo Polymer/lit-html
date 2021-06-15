@@ -1,5 +1,5 @@
 import {ContextEvent} from '../context-event.js';
-import {AnyContext, ContextType} from '../create-context.js';
+import {UnknownContext, ContextType} from '../create-context.js';
 import {ContextContainer} from './context-container.js';
 import {ReactiveController, ReactiveElement} from 'lit';
 
@@ -11,20 +11,20 @@ import {ReactiveController, ReactiveElement} from 'lit';
  * the host is connected to the DOM and registers the received callbacks
  * against its observable Context implementation.
  */
-export class ContextProvider<T extends AnyContext>
+export class ContextProvider<T extends UnknownContext>
   extends ContextContainer<ContextType<T>>
   implements ReactiveController {
   constructor(
     protected host: ReactiveElement,
-    private name: T,
-    defaultValue?: ContextType<T>
+    private context: T,
+    initialValue?: ContextType<T>
   ) {
-    super(defaultValue);
+    super(initialValue);
     this.host.addController(this);
   }
 
-  public onContextRequest = (ev: ContextEvent<AnyContext>): void => {
-    if (ev.name !== this.name) {
+  public onContextRequest = (ev: ContextEvent<UnknownContext>): void => {
+    if (ev.context !== this.context) {
       return;
     }
     ev.stopPropagation();

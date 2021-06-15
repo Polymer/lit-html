@@ -9,7 +9,7 @@ import {property} from 'lit/decorators/property.js';
 
 import {ContextProviderElement, createContext} from '../lit-context';
 import {assert} from '@esm-bundle/chai';
-import {ContextController} from '../lib/controllers/context-controller.js';
+import {ContextConsumer} from '../lib/controllers/context-consumer.js';
 
 const simpleContext = createContext<number>('simple-context');
 
@@ -19,12 +19,13 @@ class SimpleContextConsumer extends LitElement {
 
   public constructor() {
     super();
-    new ContextController(
+    new ContextConsumer(
       this,
+      simpleContext,
       (value) => {
         this.value = value;
       },
-      simpleContext
+      true // allow multiple values
     );
   }
 

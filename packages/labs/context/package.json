@@ -45,6 +45,7 @@
   },
   "author": "Google LLC",
   "dependencies": {
+    "@lit/reactive-element": "^1.0.0-rc.1",
     "lit": "^2.0.0-rc.1"
   },
   "devDependencies": {

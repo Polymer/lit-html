@@ -1,16 +1,32 @@
+/**
+ * A Context object defines an optional initial value for a Context, as well as a name identifier for debugging purposes.
+ */
 export type Context<T> = {
   name: string;
-  _type?: T;
+  initialValue?: T;
 };
 
-export type AnyContext = Context<unknown>;
+/**
+ * An unknown context type
+ */
+export type UnknownContext = Context<unknown>;
 
-export type ContextType<T extends AnyContext> = T extends Context<infer Y>
+/**
+ * A helper type which can extract a Context value type from a Context type
+ */
+export type ContextType<T extends UnknownContext> = T extends Context<infer Y>
   ? Y
   : never;
 
-export function createContext<T>(name: string): Context<T> {
+/**
+ * A function which creates a Context value object
+ */
+export function createContext<T>(
+  name: string,
+  initialValue?: T
+): Readonly<Context<T>> {
   return {
     name,
+    initialValue,
   };
 }

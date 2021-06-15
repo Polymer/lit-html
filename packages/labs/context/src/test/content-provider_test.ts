@@ -9,7 +9,7 @@ import {property} from 'lit/decorators/property.js';
 
 import {ContextProvider, createContext} from '../lit-context';
 import {assert} from '@esm-bundle/chai';
-import {ContextController} from '../lib/controllers/context-controller.js';
+import {ContextConsumer} from '../lib/controllers/context-consumer.js';
 
 const simpleContext = createContext<number>('simple-context');
 
@@ -21,18 +21,19 @@ class SimpleContextProvider extends LitElement {
   }
 }
 
-class SimpleContextConsumer extends LitElement {
+class MultipleContextConsumer extends LitElement {
   @property({type: Number})
   public value = 0;
 
   public constructor() {
     super();
-    new ContextController(
+    new ContextConsumer(
       this,
+      simpleContext,
       (value) => {
         this.value = value;
       },
-      simpleContext
+      true // allow multiple values
     );
   }
 
@@ -41,18 +42,35 @@ class SimpleContextConsumer extends LitElement {
   }
 }
 
-customElements.define('simple-context-consumer', SimpleContextConsumer);
+class OnceContextConsumer extends LitElement {
+  @property({type: Number})
+  public value = 0;
+
+  public constructor() {
+    super();
+    new ContextConsumer(this, simpleContext, (value) => {
+      this.value = value;
+    });
+  }
+
+  protected render(): TemplateResult {
+    return html`Value <span id="value">${this.value}</span>`;
+  }
+}
+
+customElements.define('multiple-context-consumer', MultipleContextConsumer);
+customElements.define('once-context-consumer', OnceContextConsumer);
 customElements.define('simple-context-provider', SimpleContextProvider);
 
 suite('context-provider', () => {
   let provider: SimpleContextProvider;
-  let consumer: SimpleContextConsumer;
+  let consumer: MultipleContextConsumer;
 
   setup(async () => {
     const container = document.createElement('div');
     container.innerHTML = `
       <simple-context-provider>
-        <simple-context-consumer></simple-context-consumer>
+        <multiple-context-consumer></multiple-context-consumer>
       </simple-context-provider>
     `;
     document.body.appendChild(container);
@@ -62,8 +80,8 @@ suite('context-provider', () => {
     ) as SimpleContextProvider;
     assert.isDefined(provider);
     consumer = provider.querySelector(
-      'simple-context-consumer'
-    ) as SimpleContextConsumer;
+      'multiple-context-consumer'
+    ) as MultipleContextConsumer;
     assert.isDefined(consumer);
   });
 
@@ -80,13 +98,13 @@ suite('context-provider', () => {
   test(`multiple consumers receive the same context`, async () => {
     const container = document.createElement('div');
     container.innerHTML = `
-      <simple-context-consumer>
-      </simple-context-consumer>
+      <multiple-context-consumer>
+      </multiple-context-consumer>
     `;
     provider.appendChild(container);
     const consumer2 = container.querySelector(
-      'simple-context-consumer'
-    ) as SimpleContextConsumer;
+      'multiple-context-consumer'
+    ) as MultipleContextConsumer;
     assert.isDefined(consumer2);
 
     assert.strictEqual(consumer.value, 1000);
@@ -95,5 +113,24 @@ suite('context-provider', () => {
     provider.setValue(500);
     assert.strictEqual(consumer.value, 500);
     assert.strictEqual(consumer2.value, 500);
+  });
+  test(`one-time consumers only receive context once`, async () => {
+    const container = document.createElement('div');
+    container.innerHTML = `
+      <once-context-consumer>
+      </once-context-consumer>
+    `;
+    provider.appendChild(container);
+    const consumer2 = container.querySelector(
+      'once-context-consumer'
+    ) as OnceContextConsumer;
+    assert.isDefined(consumer2);
+
+    assert.strictEqual(consumer.value, 1000);
+    assert.strictEqual(consumer2.value, 1000);
+
+    provider.setValue(500);
+    assert.strictEqual(consumer.value, 500);
+    assert.strictEqual(consumer2.value, 1000); // one-time consumer still has old value
   });
 });

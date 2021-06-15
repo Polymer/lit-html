@@ -53,7 +53,7 @@ export class ContextContainer<T> {
   };
 
   addCallback(callback: ContextCallback<T>, multiple?: boolean): void {
-    if (!multiple) {
+    if (multiple) {
       const record: CallbackRecord<T> = [
         callback,
         () => {

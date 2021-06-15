@@ -1,17 +1,19 @@
 import {LitElement} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
-import {AnyContext, ContextType} from '../create-context.js';
+import {UnknownContext, ContextType} from '../create-context.js';
 
-import {ContextProvider} from './context-provider.js';
+import {ContextProvider} from '../controllers/context-provider.js';
 
 declare global {
   interface HTMLElementTagNameMap {
-    'context-provider': ContextProviderElement<AnyContext>;
+    'context-provider': ContextProviderElement<UnknownContext>;
   }
 }
 
 @customElement('context-provider')
-export class ContextProviderElement<T extends AnyContext> extends LitElement {
+export class ContextProviderElement<
+  T extends UnknownContext
+> extends LitElement {
   private localValue?: ContextType<T>;
 
   @property({attribute: false})
