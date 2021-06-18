@@ -4,13 +4,16 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-import ts from 'typescript';
+import * as ts from 'typescript';
+import * as pathlib from 'path';
 
 /**
  * Filesystem caching for the TypeScript CompilerHost implementation used in
  * `compileTsFragment`. Shared across multiple invocations to significantly
  * speed up the loading of common files (e.g. TypeScript core lib d.ts files).
- * Assumes files on disk never change.
+ *
+ * Important! This caches file contents and metadata indefinitely, so it assumes
+ * files never change. Designed for testing, not suitable for real file systems.
  */
 export class CompilerHostCache {
   fileExists = new Map<string, boolean>();
@@ -27,6 +30,8 @@ export interface CompileResult {
   code: string;
   /** Errors and warnings from compilation. */
   diagnostics: ts.Diagnostic[];
+  /** TypeScript program host. */
+  host: ts.CompilerHost;
 }
 
 /**
@@ -35,13 +40,15 @@ export interface CompileResult {
  */
 export function compileTsFragment(
   inputCode: string,
+  cwd: string,
   options: ts.CompilerOptions,
   cache: CompilerHostCache,
   transformers?: (program: ts.Program) => ts.CustomTransformers
 ): CompileResult {
   let outputCode = '';
-  const {program} = createTsProgramFromFragment(
+  const {program, host} = createTsProgramFromFragment(
     inputCode,
+    cwd,
     options,
     cache,
     (code: string) => (outputCode = code)
@@ -58,6 +65,7 @@ export function compileTsFragment(
     diagnostics: emitResult.diagnostics.concat(
       ts.getPreEmitDiagnostics(program)
     ),
+    host,
   };
 }
 
@@ -68,12 +76,13 @@ export function compileTsFragment(
  */
 export function createTsProgramFromFragment(
   inputCode: string,
+  cwd: string,
   options: ts.CompilerOptions,
   cache: CompilerHostCache,
   writeFileCallback: (code: string) => void
 ): {host: ts.CompilerHost; program: ts.Program} {
-  const dummyTsFilename = '__DUMMY__.ts';
-  const dummyJsFilename = '__DUMMY__.js';
+  const dummyTsFilename = pathlib.join(cwd, '__DUMMY__.ts');
+  const dummyJsFilename = pathlib.join(cwd, '__DUMMY__.js');
   const dummySourceFile = ts.createSourceFile(
     dummyTsFilename,
     inputCode,
@@ -86,7 +95,7 @@ export function createTsProgramFromFragment(
   const host = ts.createCompilerHost(options);
 
   const realFileExists = host.fileExists.bind(host);
-  host.fileExists = (name) => {
+  host.fileExists = (name: string) => {
     if (name === dummyTsFilename) {
       return true;
     }
@@ -99,7 +108,7 @@ export function createTsProgramFromFragment(
   };
 
   const realReadFile = host.readFile.bind(host);
-  host.readFile = (name) => {
+  host.readFile = (name: string) => {
     if (name === dummyTsFilename) {
       return inputCode;
     }
@@ -112,7 +121,7 @@ export function createTsProgramFromFragment(
   };
 
   const realGetDirectories = host.getDirectories?.bind(host);
-  host.getDirectories = (path) => {
+  host.getDirectories = (path: string) => {
     if (!realGetDirectories) {
       return [];
     }
@@ -125,7 +134,7 @@ export function createTsProgramFromFragment(
   };
 
   const realGetSourceFile = host.getSourceFile.bind(host);
-  host.getSourceFile = (name, ...args) => {
+  host.getSourceFile = (name: string, ...args) => {
     if (name === dummyTsFilename) {
       return dummySourceFile;
     }

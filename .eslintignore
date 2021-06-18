@@ -121,6 +121,8 @@ packages/reactive-element/reactive-controller.*
 
 packages/tests/node_modules/
 
+packages/transformers/lib/
+
 packages/labs/motion/development/
 packages/labs/motion/node_modules/
 packages/labs/motion/index.*

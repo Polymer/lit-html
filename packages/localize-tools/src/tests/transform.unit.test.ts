@@ -10,7 +10,10 @@ import {Message, makeMessageIdMap} from '../messages.js';
 import {test} from 'uvu';
 import * as assert from 'uvu/assert';
 import prettier from 'prettier';
-import {compileTsFragment, CompilerHostCache} from './compile-ts-fragment.js';
+import {
+  compileTsFragment,
+  CompilerHostCache,
+} from '@lit/transformers/lib/tests/compile-ts-fragment.js';
 
 const cache = new CompilerHostCache();
 const IMPORT_MSG = `import { msg, str } from "@lit/localize";\n`;
@@ -52,7 +55,7 @@ function checkTransform(
   // them here, so it's a waste of time.
   options.typeRoots = [];
   options.experimentalDecorators = true;
-  const result = compileTsFragment(inputTs, options, cache, (program) => ({
+  const result = compileTsFragment(inputTs, '', options, cache, (program) => ({
     before: [
       litLocalizeTransform(
         makeMessageIdMap(opts?.messages ?? []),

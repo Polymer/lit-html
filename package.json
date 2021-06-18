@@ -15,7 +15,7 @@
     "lint": "eslint \"**/*.{js,ts}\"",
     "nuke": "rm -rf node_modules && npm install && lerna exec 'rm -rf node_modules' && lerna bootstrap && npm run clean",
     "upgrade": "rm -rf node_modules package-lock.json && npm install && lerna exec 'rm -rf node_modules package-lock.json' && lerna bootstrap && npm run clean",
-    "test": "(cd packages/tests && npm test) && (cd packages/labs/ssr && npm test) && (cd packages/localize && npm test) && (cd packages/localize-tools && npm test) && (cd packages/lit-starter-ts && npm test) && (cd packages/lit-starter-js && npm test)",
+    "test": "(cd packages/tests && npm test) && (cd packages/labs/ssr && npm test) && (cd packages/localize && npm test) && (cd packages/localize-tools && npm test) && (cd packages/lit-starter-ts && npm test) && (cd packages/lit-starter-js && npm test) && (cd packages/transformers && npm test)",
     "prepare": "husky install"
   },
   "devDependencies": {

@@ -13,7 +13,7 @@ import ts from 'typescript';
 import {
   createTsProgramFromFragment,
   CompilerHostCache,
-} from './compile-ts-fragment.js';
+} from '@lit/transformers/lib/tests/compile-ts-fragment.js';
 
 const cache = new CompilerHostCache();
 
@@ -39,6 +39,7 @@ function checkAnalysis(
   options.typeRoots = [];
   const {program, host} = createTsProgramFromFragment(
     inputTs,
+    '',
     options,
     cache,
     () => undefined

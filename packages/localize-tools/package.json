@@ -49,6 +49,7 @@
     "xmldom": "^0.5.0"
   },
   "devDependencies": {
+    "@lit/transformers": "^0.0.1",
     "@types/diff": "^5.0.0",
     "@types/fs-extra": "^9.0.1",
     "@types/glob": "^7.1.1",
