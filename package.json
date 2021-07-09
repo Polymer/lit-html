@@ -2,6 +2,9 @@
   "name": "lit-monorepo",
   "private": true,
   "type": "module",
+  "engines": {
+    "npm": "^7.0.0"
+  },
   "scripts": {
     "benchmarks": "cd packages/benchmarks && npm run benchmarks",
     "bootstrap": "lerna bootstrap --ci",

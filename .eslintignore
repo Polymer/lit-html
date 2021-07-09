@@ -121,6 +121,11 @@ packages/reactive-element/reactive-controller.*
 
 packages/tests/node_modules/
 
+packages/labs/context/development/
+packages/labs/context/test/
+packages/labs/context/node_modules/
+packages/labs/context/lit-context.*
+packages/labs/context/lib/
 packages/labs/motion/development/
 packages/labs/motion/node_modules/
 packages/labs/motion/index.*

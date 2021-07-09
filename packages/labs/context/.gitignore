@@ -1,0 +1,5 @@
+/development/
+/test/
+/node_modules/
+/lit-context.*
+/lib/
