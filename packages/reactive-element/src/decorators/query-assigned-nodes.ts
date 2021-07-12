@@ -60,7 +60,7 @@ export function queryAssignedNodes(
           slotName ? `[name=${slotName}]` : ':not([name])'
         }`;
         const slot = this.renderRoot?.querySelector(slotSelector);
-        let nodes = (slot as HTMLSlotElement)?.assignedNodes({flatten});
+        let nodes = (slot as HTMLSlotElement)?.assignedNodes({flatten}) ?? [];
         if (nodes && selector) {
           nodes = nodes.filter(
             (node) =>
