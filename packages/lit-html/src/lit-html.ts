@@ -1231,7 +1231,7 @@ class AttributePart {
    */
   readonly strings?: ReadonlyArray<string>;
   /** @internal */
-  _$committedValue: unknown | Array<unknown> = nothing;
+  _$committedValue: unknown | Array<unknown> = noChange;
   /** @internal */
   __directives?: Array<Directive | undefined>;
   /** @internal */
@@ -1257,10 +1257,7 @@ class AttributePart {
     this._$parent = parent;
     this.options = options;
     if (strings.length > 2 || strings[0] !== '' || strings[1] !== '') {
-      this._$committedValue = new Array(strings.length - 1).fill(nothing);
       this.strings = strings;
-    } else {
-      this._$committedValue = nothing;
     }
     if (ENABLE_EXTRA_SECURITY_HOOKS) {
       this._sanitizer = undefined;
@@ -1298,19 +1295,24 @@ class AttributePart {
     const strings = this.strings;
 
     // Whether any of the values has changed, for dirty-checking
-    let change = false;
+    // noChange is the initial value, so we always render the first time
+    let change = this._$committedValue === noChange;
 
     if (strings === undefined) {
       // Single-value binding case
       value = resolveDirective(this, value, directiveParent, 0);
-      change =
+      change ||=
         !isPrimitive(value) ||
         (value !== this._$committedValue && value !== noChange);
       if (change) {
-        this._$committedValue = value;
+        this._$committedValue = value = value === noChange ? '' : value;
       }
     } else {
       // Interpolation case
+      if (this._$committedValue === noChange) {
+        // On first render for interpolations, initialize a values array
+        this._$committedValue = [];
+      }
       const values = value as Array<unknown>;
       value = strings[0];
 
@@ -1344,6 +1346,7 @@ class AttributePart {
     if (value === nothing) {
       (wrap(this.element) as Element).removeAttribute(this.name);
     } else {
+      value ??= '';
       if (ENABLE_EXTRA_SECURITY_HOOKS) {
         if (this._sanitizer === undefined) {
           this._sanitizer = sanitizerFactoryInternal(
@@ -1352,12 +1355,9 @@ class AttributePart {
             'attribute'
           );
         }
-        value = this._sanitizer(value ?? '');
+        value = this._sanitizer(value);
       }
-      (wrap(this.element) as Element).setAttribute(
-        this.name,
-        (value ?? '') as string
-      );
+      (wrap(this.element) as Element).setAttribute(this.name, value as string);
     }
   }
 }
@@ -1424,7 +1424,8 @@ class EventPart extends AttributePart {
     if (newListener === noChange) {
       return;
     }
-    const oldListener = this._$committedValue;
+    const oldListener =
+      this._$committedValue == noChange ? nothing : this._$committedValue;
 
     // If the new value is nothing or any options change we have to remove the
     // part as a listener.

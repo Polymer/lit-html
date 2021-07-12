@@ -971,7 +971,7 @@ suite('lit-html', () => {
       assertContent('<div>baz</div><div foo="bar"></div>');
     });
 
-    test('renders undefined in attributes', () => {
+    test('renders undefined in interpolated attributes', () => {
       render(html`<div attribute="it's ${undefined}"></div>`, container);
       assert.equal(
         stripExpressionComments(container.innerHTML),
@@ -987,6 +987,22 @@ suite('lit-html', () => {
     test('renders null in attributes', () => {
       render(html`<div attribute="${null as any}"></div>`, container);
       assertContent('<div attribute=""></div>');
+    });
+
+    test('renders noChange in attributes', () => {
+      render(html`<div attribute="${noChange as any}"></div>`, container);
+      assertContent('<div attribute=""></div>');
+    });
+
+    test('renders noChange in attributes, sets attribute only once', () => {
+      const go = (v: any) =>
+        render(html`<div attribute="${v}"></div>`, container);
+      go(noChange);
+      assertContent('<div attribute=""></div>');
+      const div = container.querySelector('div');
+      div?.setAttribute('attribute', 'A');
+      go(noChange);
+      assertContent('<div attribute="A"></div>');
     });
 
     test('nothing sentinel removes an attribute', () => {
@@ -1033,6 +1049,14 @@ suite('lit-html', () => {
     test('noChange works on one of multiple expressions', () => {
       const go = (a: any, b: any) =>
         render(html`<div foo="${a}:${b}"></div>`, container);
+
+      go('A', noChange);
+      assert.equal(
+        stripExpressionComments(container.innerHTML),
+        '<div foo="A:"></div>',
+        'A'
+      );
+
       go('A', 'B');
       assert.equal(
         stripExpressionComments(container.innerHTML),

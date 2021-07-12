@@ -17,6 +17,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- ### Fixed -->
 <!-- ### Removed -->
 
+## Unreleased
+
+<!-- ### Changed -->
+<!-- ### Added -->
+
+### Fixed
+
+- Binding `noChange` into an attribute expression now no longer removes the attribute on first render.
+
+<!-- ### Removed -->
+
 ## [2.0.0-rc.3] - 2021-05-07
 
 ### Fixed
