@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<!--
+  @license
+  Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+  This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+  The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+  The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+  Code distributed by Google as part of the polymer project is also
+  subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+  -->
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes"
+    />
+    <title>Expand collapse directive</title>
+  </head>
+  <body>
+    <expand-collapse-simple></expand-collapse-simple>
+    <expand-collapse-large></expand-collapse-large>
+    <expand-collapse-start-collapsed></expand-collapse-start-collapsed>
+    <expand-collapse-timing-function></expand-collapse-timing-function>
+
+    <script type="module">
+      import {LitElement, html, css} from 'lit';
+      import {expandCollapse} from '../development/expand-collapse.js';
+
+      class ExpandCollapseSimple extends LitElement {
+        static styles = css`
+          :host {
+            display: block;
+            margin-bottom: 16px;
+          }
+
+          .text {
+            border: 1px solid black;
+            width: 400px;
+            padding: 8px;
+          }
+        `;
+
+        static properties = {
+          expanded: {type: Boolean},
+        };
+
+        constructor() {
+          super();
+          this.expanded = true;
+        }
+
+        render() {
+          return html`
+            <button @click=${this._toggleExpanded}>Expand</button>
+            Simple example
+
+            <div ${expandCollapse(this.expanded, {duration: 600})}>
+              <div class="text">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat.
+              </div>
+            </div>
+          `;
+        }
+
+        _toggleExpanded() {
+          this.expanded = !this.expanded;
+        }
+      }
+
+      customElements.define('expand-collapse-simple', ExpandCollapseSimple);
+
+      class ExpandCollapseLarge extends LitElement {
+        static styles = css`
+          :host {
+            display: block;
+            margin-bottom: 16px;
+          }
+
+          .text {
+            border: 1px solid black;
+            width: 400px;
+            padding: 8px;
+          }
+        `;
+
+        static properties = {
+          expanded: {type: Boolean},
+        };
+
+        constructor() {
+          super();
+          this.expanded = true;
+        }
+
+        render() {
+          return html`
+            <button @click=${this._toggleExpanded}>Expand</button>
+            Large example with inner margins
+
+            <div ${expandCollapse(this.expanded, {duration: 600})}>
+              <div class="text">
+                <p>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                  laboris nisi ut aliquip ex ea commodo consequat.
+                </p>
+
+                <p>
+                  Duis aute irure dolor in reprehenderit in voluptate velit esse
+                  cillum dolore eu fugiat nulla pariatur. Excepteur sint
+                  occaecat cupidatat non proident, sunt in culpa qui officia
+                  deserunt mollit anim id est laborum.
+                </p>
+              </div>
+            </div>
+          `;
+        }
+
+        _toggleExpanded() {
+          this.expanded = !this.expanded;
+        }
+      }
+
+      customElements.define('expand-collapse-large', ExpandCollapseLarge);
+
+      class ExpandCollapseStartCollapsed extends LitElement {
+        static styles = css`
+          :host {
+            display: block;
+            margin-bottom: 16px;
+          }
+
+          .text {
+            border: 1px solid black;
+            width: 400px;
+            padding: 8px;
+          }
+        `;
+
+        static properties = {
+          expanded: {type: Boolean},
+        };
+
+        constructor() {
+          super();
+          this.expanded = false;
+        }
+
+        render() {
+          return html`
+            <button @click=${this._toggleExpanded}>Expand</button>
+            Start collapsed
+
+            <div ${expandCollapse(this.expanded, {duration: 600})}>
+              <div class="text">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat.
+              </div>
+            </div>
+          `;
+        }
+
+        _toggleExpanded() {
+          this.expanded = !this.expanded;
+        }
+      }
+
+      customElements.define(
+        'expand-collapse-start-collapsed',
+        ExpandCollapseStartCollapsed
+      );
+
+      class ExpandCollapseTimingFunction extends LitElement {
+        static styles = css`
+          :host {
+            display: block;
+            margin-bottom: 16px;
+          }
+
+          .text {
+            border: 1px solid black;
+            width: 400px;
+            padding: 8px;
+          }
+        `;
+
+        static properties = {
+          expanded: {type: Boolean},
+        };
+
+        constructor() {
+          super();
+          this.expanded = true;
+        }
+
+        render() {
+          return html`
+            <button @click=${this._toggleExpanded}>Expand</button>
+            Example with timing function
+
+            <div ${expandCollapse(this.expanded, {duration: 600, timingFunction: 'linear'})}>
+              <div class="text">
+                <p>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                  laboris nisi ut aliquip ex ea commodo consequat.
+                </p>
+
+                <p>
+                  Duis aute irure dolor in reprehenderit in voluptate velit esse
+                  cillum dolore eu fugiat nulla pariatur. Excepteur sint
+                  occaecat cupidatat non proident, sunt in culpa qui officia
+                  deserunt mollit anim id est laborum.
+                </p>
+              </div>
+            </div>
+          `;
+        }
+
+        _toggleExpanded() {
+          this.expanded = !this.expanded;
+        }
+      }
+
+      customElements.define('expand-collapse-timing-function', ExpandCollapseTimingFunction);
+    </script>
+  </body>
+</html>

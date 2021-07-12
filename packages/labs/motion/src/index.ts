@@ -6,3 +6,4 @@
 export * from './flip.js';
 export * from './flip-controller.js';
 export * from './position.js';
+export * from './expand-collapse.js';
