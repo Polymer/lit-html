@@ -327,11 +327,14 @@ export interface RenderOptions {
    */
   renderBefore?: ChildNode | null;
   /**
-   * Node used for cloning the template (`importNode` will be called on this
-   * node). This controls the `ownerDocument` of the rendered DOM, along with
-   * any inherited context. Defaults to the global `document`.
+   * The node into which the template clone will be adopted. This controls the
+   * `ownerDocument` of the rendered DOM, along with any inherited context.
+   * Defaults to the global `document`.
    */
-  creationScope?: {importNode(node: Node, deep?: boolean): Node};
+  creationScope?: Node & {
+    adoptNode: Document['adoptNode'];
+    customElements?: CustomElementRegistry;
+  };
 }
 
 /**
@@ -811,7 +814,7 @@ class TemplateInstance {
       el: {content},
       parts: parts,
     } = this._$template;
-    const fragment = (options?.creationScope ?? d).importNode(content, true);
+    const fragment = content.cloneNode(true);
     walker.currentNode = fragment;
 
     let node = walker.nextNode()!;
@@ -848,6 +851,9 @@ class TemplateInstance {
         nodeIndex++;
       }
     }
+    const creationScope = options?.creationScope;
+    (creationScope ?? d).adoptNode(fragment);
+    (creationScope?.customElements ?? window.customElements).upgrade(fragment);
     return fragment;
   }
 

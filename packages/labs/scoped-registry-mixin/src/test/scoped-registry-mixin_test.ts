@@ -59,7 +59,6 @@ suite('scoped-registry-mixin', () => {
 
     const scopedComponent = container.firstChild as LitElement;
     await scopedComponent.updateComplete;
-    // @ts-expect-error: customElements not yet in ShadowRoot type
     const registry = scopedComponent?.shadowRoot?.customElements;
 
     assert.exists(registry);
@@ -76,7 +75,6 @@ suite('scoped-registry-mixin', () => {
     const simpleGreeting = scopedComponent?.shadowRoot?.getElementById(
       'greeting'
     ) as LitElement;
-    // @ts-expect-error: customElements not yet in ShadowRoot type
     const registry = simpleGreeting?.shadowRoot?.customElements;
 
     assert.notExists(registry);

@@ -13,7 +13,8 @@ declare global {
     customElements?: CustomElementRegistry;
   }
   interface ShadowRoot {
-    importNode(node: Node, deep?: boolean): Node;
+    adoptNode: Document['adoptNode'];
+    customElements?: CustomElementRegistry;
   }
 }
 
