@@ -36,8 +36,7 @@
   "author": "Google LLC",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "lit": "^2.0.0-rc.1",
-    "lit-element": "^3.0.0-rc.1"
+    "lit": "^2.0.0-rc.1"
   },
   "devDependencies": {
     "@11ty/eleventy": "^0.12.1",

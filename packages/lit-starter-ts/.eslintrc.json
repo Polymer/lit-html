@@ -39,9 +39,7 @@
     {
       "files": [
         "*_test.ts",
-        "**/custom_typings/*.ts",
-        "packages/labs/ssr/src/test/integration/tests/**",
-        "packages/labs/ssr/src/lib/util/parse5-utils.ts"
+        "**/custom_typings/*.ts"
       ],
       "rules": {
         "@typescript-eslint/no-explicit-any": "off"
