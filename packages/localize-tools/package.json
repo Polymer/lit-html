@@ -20,7 +20,7 @@
   "type": "module",
   "scripts": {
     "clean": "git clean -dXn | sed 's/^Would remove //' | grep -v node_modules | xargs rm -rf",
-    "build": "npm run clean && npm run generate-json-schema && tsc",
+    "build": "npm run clean && npm run generate-json-schema && tsc --build",
     "generate-json-schema": "typescript-json-schema tsconfig.schema.json ConfigFile --include=src/types/config.d.ts --required --noExtraProps > config.schema.json",
     "test": "npm run build && npm run test:unit && npm run test:check-tsc",
     "test:unit": "uvu lib/tests '\\.test\\.js$'",
@@ -49,6 +49,7 @@
     "xmldom": "^0.5.0"
   },
   "devDependencies": {
+    "@lit-labs/ssr": "^1.0.0-rc.1",
     "@types/diff": "^5.0.0",
     "@types/fs-extra": "^9.0.1",
     "@types/glob": "^7.1.1",

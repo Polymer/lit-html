@@ -5,13 +5,10 @@
  */
 
 import {_installMsgImplementation} from '../lit-localize.js';
-import {generateMsgId} from '../internal/id-generation.js';
 import {Deferred} from '../internal/deferred.js';
 import {LOCALE_STATUS_EVENT} from '../internal/locale-status-event.js';
-import {joinStringsAndValues} from '../internal/str-tag.js';
-import {defaultMsg} from '../internal/default-msg.js';
+import {runtimeMsg} from '../internal/runtime-msg.js';
 
-import type {TemplateResult} from 'lit';
 import type {LocaleStatusEventDetail} from '../internal/locale-status-event.js';
 import type {
   LocaleModule,
@@ -38,9 +35,11 @@ export interface RuntimeConfiguration {
   targetLocales: Iterable<string>;
 
   /**
-   * Required function that returns a promise of the localized templates for the
-   * given locale code. For security, this function will only ever be called
-   * with a `locale` that is contained by `targetLocales`.
+   * Required function that returns the localized templates for the given locale
+   * code.
+   *
+   * This function will only ever be called with a `locale` that is contained by
+   * `targetLocales`.
    */
   loadLocale: (locale: string) => Promise<LocaleModule>;
 }
@@ -79,7 +78,8 @@ export const configureLocalization: ((config: RuntimeConfiguration) => {
 }) & {
   _LIT_LOCALIZE_CONFIGURE_LOCALIZATION_?: never;
 } = (config: RuntimeConfiguration) => {
-  _installMsgImplementation(runtimeMsg as MsgFn);
+  _installMsgImplementation(((template: TemplateLike, options?: MsgOptions) =>
+    runtimeMsg(templates, template, options)) as MsgFn);
   activeLocale = sourceLocale = config.sourceLocale;
   validLocales = new Set(config.targetLocales);
   validLocales.add(config.sourceLocale);
@@ -163,70 +163,3 @@ const setLocale: ((newLocale: string) => Promise<void>) & {
   );
   return loading.promise;
 };
-
-function runtimeMsg(
-  template: TemplateLike,
-  options?: MsgOptions
-): string | TemplateResult {
-  if (templates) {
-    const id = options?.id ?? generateId(template);
-    const localized = templates[id];
-    if (localized) {
-      if (typeof localized === 'string') {
-        // E.g. "Hello World!"
-        return localized;
-      } else if ('strTag' in localized) {
-        // E.g. str`Hello ${name}!`
-        //
-        // Localized templates have ${number} in place of real template
-        // expressions. They can't have real template values, because the
-        // variable scope would be wrong. The number tells us the index of the
-        // source value to substitute in its place, because expressions can be
-        // moved to a different position during translation.
-        return joinStringsAndValues(
-          localized.strings,
-          // Cast `template` because its type wasn't automatically narrowed (but
-          // we know it must be the same type as `localized`).
-          (template as TemplateResult).values,
-          localized.values as number[]
-        );
-      } else {
-        // E.g. html`Hello <b>${name}</b>!`
-        //
-        // We have to keep our own mapping of expression ordering because we do
-        // an in-place update of `values`, and otherwise we'd lose ordering for
-        // subsequent renders.
-        let order = expressionOrders.get(localized);
-        if (order === undefined) {
-          order = localized.values as number[];
-          expressionOrders.set(localized, order);
-        }
-        // Cast `localized.values` because it's readonly.
-        (
-          localized as {
-            values: TemplateResult['values'];
-          }
-        ).values = order.map((i) => (template as TemplateResult).values[i]);
-        return localized;
-      }
-    }
-  }
-  return defaultMsg(template);
-}
-
-const expressionOrders = new WeakMap<TemplateResult, number[]>();
-
-const hashCache = new Map<TemplateStringsArray | string, string>();
-
-function generateId(template: TemplateLike): string {
-  const strings = typeof template === 'string' ? template : template.strings;
-  let id = hashCache.get(strings);
-  if (id === undefined) {
-    id = generateMsgId(
-      strings,
-      typeof template !== 'string' && !('strTag' in template)
-    );
-    hashCache.set(strings, id);
-  }
-  return id;
-}
