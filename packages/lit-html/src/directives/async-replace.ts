@@ -81,7 +81,7 @@ class AsyncReplaceDirective extends AsyncDirective {
  * previous values with new values, so that only one value is ever rendered
  * at a time. This directive may be used in any expression type.
  *
- * Async iterables are objects with a [Symbol.asyncIterator] method, which
+ * Async iterables are objects with a `[Symbol.asyncIterator]` method, which
  * returns an iterator who's `next()` method returns a Promise. When a new
  * value is available, the Promise resolves and the value is rendered to the
  * Part controlled by the directive. If another value other than this

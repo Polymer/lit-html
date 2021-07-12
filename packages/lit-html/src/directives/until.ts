@@ -86,8 +86,10 @@ class UntilDirective extends AsyncDirective {
  *
  * Example:
  *
- *     const content = fetch('./content.txt').then(r => r.text());
- *     html`${until(content, html`<span>Loading...</span>`)}`
+ * ```js
+ * const content = fetch('./content.txt').then(r => r.text());
+ * html`${until(content, html`<span>Loading...</span>`)}`
+ * ```
  */
 export const until = directive(UntilDirective);
 

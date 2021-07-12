@@ -82,7 +82,9 @@ class LiveDirective extends Directive {
  * it alone. If this is not what you want--if you want to overwrite the DOM
  * value with the bound value no matter what--use the `live()` directive:
  *
- *     html`<input .value=${live(x)}>`
+ * ```js
+ * html`<input .value=${live(x)}>`
+ * ```
  *
  * `live()` performs a strict equality check agains the live DOM value, and if
  * the new value is equal to the live value, does nothing. This means that

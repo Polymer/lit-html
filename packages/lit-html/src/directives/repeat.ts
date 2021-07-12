@@ -452,8 +452,13 @@ export interface RepeatDirectiveFn {
  * The `keyFn` takes two parameters, the item and its index, and returns a unique key value.
  *
  * ```js
- * ${repeat(this.items, (item) => item.id, (item, index) =>
-     html`<li>${index}: ${item.name}</li>`)}
+ * html`
+ *   <ol>
+ *     ${repeat(this.items, (item) => item.id, (item, index) => {
+ *       return html`<li>${index}: ${item.name}</li>`;
+ *     })}
+ *   </ol>
+ * `
  * ```
  *
  * **Important**: If providing a `keyFn`, keys *must* be unique for all items in a

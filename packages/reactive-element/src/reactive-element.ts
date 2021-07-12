@@ -449,10 +449,12 @@ export abstract class ReactiveElement
    * `getPropertyDescriptor`. To customize the options for a property,
    * implement `createProperty` like this:
    *
+   * ```js
    * static createProperty(name, options) {
    *   options = Object.assign(options, {myOption: true});
    *   super.createProperty(name, options);
    * }
+   * ```
    *
    * @nocollapse
    * @category properties
@@ -490,22 +492,24 @@ export abstract class ReactiveElement
    * If no descriptor is returned, the property will not become an accessor.
    * For example,
    *
-   *   class MyElement extends LitElement {
-   *     static getPropertyDescriptor(name, key, options) {
-   *       const defaultDescriptor =
-   *           super.getPropertyDescriptor(name, key, options);
-   *       const setter = defaultDescriptor.set;
-   *       return {
-   *         get: defaultDescriptor.get,
-   *         set(value) {
-   *           setter.call(this, value);
-   *           // custom action.
-   *         },
-   *         configurable: true,
-   *         enumerable: true
-   *       }
+   * ```js
+   * class MyElement extends LitElement {
+   *   static getPropertyDescriptor(name, key, options) {
+   *     const defaultDescriptor =
+   *         super.getPropertyDescriptor(name, key, options);
+   *     const setter = defaultDescriptor.set;
+   *     return {
+   *       get: defaultDescriptor.get,
+   *       set(value) {
+   *         setter.call(this, value);
+   *         // custom action.
+   *       },
+   *       configurable: true,
+   *       enumerable: true
    *     }
    *   }
+   * }
+   * ```
    *
    * @nocollapse
    * @category properties
@@ -1038,7 +1042,7 @@ export abstract class ReactiveElement
    *
    * For instance, to schedule updates to occur just before the next frame:
    *
-   * ```
+   * ```js
    * protected async performUpdate(): Promise<unknown> {
    *   await new Promise((resolve) => requestAnimationFrame(() => resolve()));
    *   super.performUpdate();
@@ -1177,12 +1181,16 @@ export abstract class ReactiveElement
    * language is ES5 (https://github.com/microsoft/TypeScript/issues/338).
    * This method should be overridden instead. For example:
    *
-   *   class MyElement extends LitElement {
-   *     async getUpdateComplete() {
-   *       await super.getUpdateComplete();
-   *       await this._myChild.updateComplete;
-   *     }
+   * ```js
+   * class MyElement extends LitElement {
+   *   async getUpdateComplete() {
+   *     const result = await super.getUpdateComplete();
+   *     await this._myChild.updateComplete;
+   *     return result;
    *   }
+   * }
+   * ```
+   *
    * @category updates
    */
   protected getUpdateComplete(): Promise<boolean> {
