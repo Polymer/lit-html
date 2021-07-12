@@ -58,6 +58,13 @@
       "focus": true
     },
     {
+      "name": "TS: eleventy-plugin-lit",
+      "icon": "checklist",
+      "cwd": "[workspaceFolder]/packages/labs/eleventy-plugin-lit",
+      "command": "npm run build:ts:watch",
+      "focus": true
+    },
+    {
       "name": "Rollup: lit-html",
       "icon": "checklist",
       "cwd": "[workspaceFolder]/packages/lit-html",
