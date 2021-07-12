@@ -521,10 +521,10 @@ export abstract class ReactiveElement
         return (this as {[key: string]: unknown})[key as string];
       },
       set(this: ReactiveElement, value: unknown) {
-        const oldValue = (this as {} as {[key: string]: unknown})[
+        const oldValue = (this as unknown as {[key: string]: unknown})[
           name as string
         ];
-        (this as {} as {[key: string]: unknown})[key as string] = value;
+        (this as unknown as {[key: string]: unknown})[key as string] = value;
         (this as unknown as ReactiveElement).requestUpdate(
           name,
           oldValue,

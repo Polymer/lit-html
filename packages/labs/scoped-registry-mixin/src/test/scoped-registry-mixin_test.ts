@@ -10,7 +10,7 @@ import {ScopedRegistryHost} from '../scoped-registry-mixin';
 import {assert} from '@esm-bundle/chai';
 
 class SimpleGreeting extends LitElement {
-  private name: String;
+  private name: string;
 
   static get properties() {
     return {name: {type: String}};

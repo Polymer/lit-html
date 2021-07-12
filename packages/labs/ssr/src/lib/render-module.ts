@@ -32,7 +32,7 @@ export const renderModule = async (
     },
   });
   const module = await importModule(specifier, referrer, window);
-  const f = module.namespace[functionName] as Function;
+  const f = module.namespace[functionName] as (...args: unknown[]) => unknown;
   // TODO: should we require the result be an AsyncIterable?
   return f(...args);
 };

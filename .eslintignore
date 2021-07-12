@@ -155,5 +155,9 @@ packages/labs/task/test/
 packages/labs/task/node_modules/
 packages/labs/task/index.*
 packages/labs/task/task.*
+packages/localize/examples/runtime/lib/
+
+packages/localize/examples/transform/lib/
+packages/localize/examples/transform/bundled/
 
 packages/localize/testdata/

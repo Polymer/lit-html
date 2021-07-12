@@ -54,9 +54,9 @@ const nopUpdateCount = queryParams.nopUpdateCount ?? 10;
 interface Data {
   key: number;
   text: string;
-  property: {};
-  classes: {};
-  style: {};
+  property: unknown;
+  classes: Record<string, boolean>;
+  style: Record<string, string>;
   node: Node;
   handler: () => void;
   childData?: Data[];

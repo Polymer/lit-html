@@ -3000,7 +3000,7 @@ suite('ReactiveElement', () => {
     });
 
     test('using mixin, calling super.observedAttributes', () => {
-      type Constructor<T = {}> = {new (...args: any[]): T};
+      type Constructor<T> = {new (...args: any[]): T};
       function MyMixin<
         B extends Constructor<
           HTMLElement & {
@@ -3114,7 +3114,7 @@ suite('ReactiveElement', () => {
     });
 
     test('using mixin, calling superclass.observedAttributes directly', () => {
-      type Constructor<T = {}> = {new (...args: any[]): T};
+      type Constructor<T> = {new (...args: any[]): T};
       function MyMixin<
         B extends Constructor<
           HTMLElement & {

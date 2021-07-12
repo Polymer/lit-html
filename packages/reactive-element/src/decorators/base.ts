@@ -23,7 +23,7 @@ export interface ClassElement {
   kind: 'field' | 'method';
   key: PropertyKey;
   placement: 'static' | 'prototype' | 'own';
-  initializer?: Function;
+  initializer?: () => void;
   extras?: ClassElement[];
   finisher?: <T>(clazz: Constructor<T>) => void | Constructor<T>;
   descriptor?: PropertyDescriptor;
@@ -31,7 +31,7 @@ export interface ClassElement {
 
 export const legacyPrototypeMethod = (
   descriptor: PropertyDescriptor,
-  proto: Object,
+  proto: unknown,
   name: PropertyKey
 ) => {
   Object.defineProperty(proto, name, descriptor);

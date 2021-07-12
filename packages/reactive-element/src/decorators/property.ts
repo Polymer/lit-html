@@ -65,10 +65,11 @@ const standardProperty = (
 
 const legacyProperty = (
   options: PropertyDeclaration,
-  proto: Object,
+  proto: unknown,
   name: PropertyKey
 ) => {
-  (proto.constructor as typeof ReactiveElement).createProperty(name, options);
+  ((proto as Record<string, unknown>)
+    .constructor as typeof ReactiveElement).createProperty(name, options);
 };
 
 /**
@@ -106,8 +107,8 @@ const legacyProperty = (
  */
 export function property(options?: PropertyDeclaration) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (protoOrDescriptor: Object | ClassElement, name?: PropertyKey): any =>
+  return (protoOrDescriptor: unknown | ClassElement, name?: PropertyKey): any =>
     name !== undefined
-      ? legacyProperty(options!, protoOrDescriptor as Object, name)
+      ? legacyProperty(options!, protoOrDescriptor, name)
       : standardProperty(options!, protoOrDescriptor as ClassElement);
 }

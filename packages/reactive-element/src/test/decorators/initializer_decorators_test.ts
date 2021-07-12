@@ -57,7 +57,7 @@ suite('Decorators using initializers', () => {
               (
                 (ctor.prototype as unknown as T)[
                   name as keyof T
-                ] as unknown as Function
+                ] as unknown as (ev: Event) => unknown
               ).call(e, event);
             let l = listeners.get(e);
             if (l === undefined) {

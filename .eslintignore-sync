@@ -3,6 +3,7 @@
 
 [relative]
 packages/{*,labs/*}/{.gitignore,.eslintignore}
+packages/localize/examples/{transform,runtime}/.gitignore
 
 [inline]
 packages/localize/testdata/

@@ -10,7 +10,7 @@ interface ShadyCSS {
   styleElement(host: Element, overrideProps?: {[key: string]: string}): void;
   styleSubtree(host: Element, overrideProps?: {[key: string]: string}): void;
   getComputedStyleValue(element: Element, property: string): string;
-  ApplyShim: object;
+  ApplyShim: unknown;
   prepareTemplateDom(template: Element, elementName: string): void;
   prepareTemplateStyles(template: Element, elementName: string): void;
   ScopingShim:

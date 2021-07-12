@@ -22,7 +22,7 @@ const port = 8080;
 // This is a fairly standard Koa server that represents how the SSR API might
 // be used.
 const app = new Koa();
-app.use(async (ctx: Koa.Context, next: Function) => {
+app.use(async (ctx: Koa.Context, next: Koa.Next) => {
   // Pass through anything not the root path to static file serving
   if (ctx.URL.pathname !== '/') {
     await next();

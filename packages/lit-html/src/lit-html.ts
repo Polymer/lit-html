@@ -321,7 +321,7 @@ export interface RenderOptions {
    * An object to use as the `this` value for event listeners. It's often
    * useful to set this to the host component rendering a template.
    */
-  host?: object;
+  host?: unknown;
   /**
    * A DOM node before which to render content in the container.
    */

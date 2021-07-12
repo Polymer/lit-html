@@ -31,7 +31,7 @@ interface RefInternal {
 // When callbacks are used for refs, this map tracks the last value the callback
 // was called with, for ensuring a directive doesn't clear the ref if the ref
 // has already been rendered to a new spot
-const lastElementForCallback: WeakMap<Function, Element | undefined> =
+const lastElementForCallback: WeakMap<RefOrCallback, Element | undefined> =
   new WeakMap();
 
 export type RefOrCallback = Ref | ((el: Element | undefined) => void);

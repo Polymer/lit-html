@@ -13,6 +13,7 @@
  */
 
 import fetch from 'node-fetch';
+import type {RequestInit} from 'node-fetch';
 
 /**
  * Constructs a fresh instance of the "window" vm context to use for evaluating
@@ -129,7 +130,7 @@ export const getWindow = ({
     btoa(s: string) {
       return Buffer.from(s, 'binary').toString('base64');
     },
-    fetch: (url: URL, init: {}) => fetch(url, init),
+    fetch: (url: URL, init: RequestInit) => fetch(url, init),
 
     location: new URL('http://localhost'),
     MutationObserver: class {

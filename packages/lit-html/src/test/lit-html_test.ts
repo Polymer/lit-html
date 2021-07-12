@@ -1243,7 +1243,7 @@ suite('lit-html', () => {
     });
 
     test('allows updating event listener without extra calls to remove/addEventListener', () => {
-      let listener: Function | null;
+      let listener: (() => void) | null;
       const t = () => html`<div @click=${listener}></div>`;
       render(t(), container);
       const div = container.querySelector('div')!;
