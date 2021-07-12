@@ -1,0 +1,128 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>shop-home</title>
+
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../node_modules/chai/chai.js"></script>
+  <script src="../node_modules/mocha/mocha.js"></script>
+  <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
+</head>
+<body>
+
+  <test-fixture id="basic">
+    <template>
+       <shop-home></shop-home>
+    </template>
+  </test-fixture>
+
+  <script type="module">
+    import '@polymer/test-fixture';
+    import sinon from 'sinon';
+    import '../src/shop-home.js';
+  
+    suite('shop-home tests', function() {
+      var home;
+
+      var categories = [
+        {
+          name: 'mens_outerwear',
+          title: 'Men\'s Outerwear',
+          image: '../images/mens_outerwear.jpg',
+          placeholder: 'data:image/jpeg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAAAeAAD/7gAOQWRvYmUAZMAAAAAB/9sAhAAQCwsLDAsQDAwQFw8NDxcbFBAQFBsfFxcXFxcfHhcaGhoaFx4eIyUnJSMeLy8zMy8vQEBAQEBAQEBAQEBAQEBAAREPDxETERUSEhUUERQRFBoUFhYUGiYaGhwaGiYwIx4eHh4jMCsuJycnLis1NTAwNTVAQD9AQEBAQEBAQEBAQED/wAARCAADAA4DASIAAhEBAxEB/8QAXAABAQEAAAAAAAAAAAAAAAAAAAIEAQEAAAAAAAAAAAAAAAAAAAACEAAAAwYHAQAAAAAAAAAAAAAAERMBAhIyYhQhkaEDIwUVNREBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A3dkr5e8tfpwuneJITOzIcmQpit037Bw4mnCVNOpAAQv/2Q=='
+        },
+        {
+          name: 'ladies_outerwear',
+          title: 'Ladies Outerwear',
+          image: '../images/ladies_outerwear.jpg',
+          placeholder: 'data:image/jpeg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAAAeAAD/7gAOQWRvYmUAZMAAAAAB/9sAhAAQCwsLDAsQDAwQFw8NDxcbFBAQFBsfFxcXFxcfHhcaGhoaFx4eIyUnJSMeLy8zMy8vQEBAQEBAQEBAQEBAQEBAAREPDxETERUSEhUUERQRFBoUFhYUGiYaGhwaGiYwIx4eHh4jMCsuJycnLis1NTAwNTVAQD9AQEBAQEBAQEBAQED/wAARCAADAA4DASIAAhEBAxEB/8QAWQABAQAAAAAAAAAAAAAAAAAAAAEBAQEAAAAAAAAAAAAAAAAAAAIDEAABAwMFAQAAAAAAAAAAAAARAAEygRIDIlITMwUVEQEBAAAAAAAAAAAAAAAAAAAAQf/aAAwDAQACEQMRAD8Avqn5meQ0kwk1UyclmLtNj7L4PQoioFf/2Q=='
+        },
+        {
+          name: 'mens_tshirts',
+          title: 'Men\'s T-Shirts',
+          image: '../images/mens_tshirts.jpg',
+          placeholder: 'data:image/jpeg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAAAeAAD/7gAOQWRvYmUAZMAAAAAB/9sAhAAQCwsLDAsQDAwQFw8NDxcbFBAQFBsfFxcXFxcfHhcaGhoaFx4eIyUnJSMeLy8zMy8vQEBAQEBAQEBAQEBAQEBAAREPDxETERUSEhUUERQRFBoUFhYUGiYaGhwaGiYwIx4eHh4jMCsuJycnLis1NTAwNTVAQD9AQEBAQEBAQEBAQED/wAARCAADAA4DASIAAhEBAxEB/8QAWwABAQEAAAAAAAAAAAAAAAAAAAMEAQEAAAAAAAAAAAAAAAAAAAAAEAABAwEJAAAAAAAAAAAAAAARAAESEyFhodEygjMUBREAAwAAAAAAAAAAAAAAAAAAAEFC/9oADAMBAAIRAxEAPwDb7kupZU1MTGnvOCgxpvzEXTyRElCmf//Z'
+        },
+        {
+          name: 'ladies_tshirts',
+          title: 'Ladies T-Shirts',
+          image: '../images/ladies_tshirts.jpg',
+          placeholder: 'data:image/jpeg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAAAeAAD/7gAOQWRvYmUAZMAAAAAB/9sAhAAQCwsLDAsQDAwQFw8NDxcbFBAQFBsfFxcXFxcfHhcaGhoaFx4eIyUnJSMeLy8zMy8vQEBAQEBAQEBAQEBAQEBAAREPDxETERUSEhUUERQRFBoUFhYUGiYaGhwaGiYwIx4eHh4jMCsuJycnLis1NTAwNTVAQD9AQEBAQEBAQEBAQED/wAARCAADAA4DASIAAhEBAxEB/8QAXwABAQEAAAAAAAAAAAAAAAAAAAMFAQEBAAAAAAAAAAAAAAAAAAABAhAAAQIDCQAAAAAAAAAAAAAAEQABITETYZECEjJCAzMVEQACAwAAAAAAAAAAAAAAAAAAATFBgf/aAAwDAQACEQMRAD8AzeADAZiFc5J7BC9Scek3VrtooilSNaf/2Q=='
+        }
+      ];
+
+      setup(function() {
+        home = fixture('basic');
+      });
+
+      test('item lengths should be equal', function(done) {
+        // Set categories property
+        home.categories = categories;
+        // Data bindings will stamp out new DOM asynchronously
+        // so wait to check for updates
+        flush(function() {
+          var items = home.shadowRoot.querySelectorAll('.item');
+          assert.equal(home.categories.length, items.length);
+          done();
+        });
+      });
+
+      test('image should be set', function(done) {
+        // Set categories property
+        home.categories = categories;
+        // Data bindings will stamp out new DOM asynchronously
+        // so wait to check for updates
+        flush(function() {
+          var image = home.shadowRoot.querySelector('shop-image');
+          assert.equal(categories[0].image, image.src);
+          done();
+        });
+      });
+
+      test('title should render correctly', function(done) {
+        // Set categories property
+        home.categories = categories;
+        // Data bindings will stamp out new DOM asynchronously
+        // so wait to check for updates
+        flush(function() {
+          var title = home.shadowRoot.querySelector('h2');
+          assert.equal(categories[0].title, title.textContent);
+          done();
+        });
+      });
+
+      test('link should be set', function(done) {
+        // Set categories property
+        home.categories = categories;
+        // Data bindings will stamp out new DOM asynchronously
+        // so wait to check for updates
+        flush(function() {
+          var link = home.shadowRoot.querySelector('a');
+          assert.equal('/list/' + categories[0].name, link.getAttribute('href'));
+          done();
+        });
+      });
+
+      test('change-section event should fire', function() {
+        var listenerSpy = sinon.spy();
+        home.addEventListener('change-section', listenerSpy);
+        // Set visible attribute
+        home.setAttribute('visible', '');
+        assert.isTrue(listenerSpy.called, 'should fire after attribute "visible" is set');
+      });
+    });
+  </script>
+
+</body>
+</html>

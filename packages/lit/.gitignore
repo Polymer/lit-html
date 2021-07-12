@@ -16,3 +16,6 @@
 
 /lit.min.*
 /polyfill-support.*
+
+/smoke
+/src/smoke

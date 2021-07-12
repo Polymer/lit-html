@@ -1,0 +1,145 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>shop-cart</title>
+
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../node_modules/chai/chai.js"></script>
+  <script src="../node_modules/mocha/mocha.js"></script>
+  <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
+</head>
+<body>
+
+  <test-fixture id="basic">
+    <template>
+       <shop-cart></shop-cart>
+    </template>
+  </test-fixture>
+
+  <script type="module">
+    import '@polymer/test-fixture';
+    import sinon from 'sinon';
+    import '../src/shop-cart.js';
+
+    suite('shop-cart tests', function() {
+      var cart;
+
+      var cartData = [
+        {
+          item: {
+            name: "Men+s+Tech+Shell+Full-Zip",
+            title: "Men's Tech Shell Full-Zip",
+            category: "mens_outerwear",
+            price: 50.2,
+            description: "A versatile full-zip that you can wear all day long and even to the gym. This technical shell features moisture-wicking fabric, added stretch and a hidden pocket for your smartphone or media player.&amp;nbsp;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Features:&lt;/div&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;100% polyester.&lt;/li&gt;&lt;li&gt;Smooth, technical front with textured mesh back.&lt;/li&gt;&lt;li&gt;Drawstring bottom for adjustable fit.&lt;/li&gt;&lt;li&gt;Raglan sleeves.&lt;/li&gt;&lt;li&gt;Available in forest green with the white Google logo embroidered at left chest.&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;",
+            image: "../data/images/10-15068B.jpg",
+            largeImage: "../data/images/10-15068A.jpg"
+          },
+          quantity: 1,
+          size: "M"
+        },
+        {
+          item: {
+            name: "Ladies+Voyage+Fleece+Jacket",
+            title: "Ladies Voyage Fleece Jacket",
+            category: "ladies_outerwear",
+            price: 48,
+            description: "&lt;div&gt;Perhaps the equivalent to that comfort blanket you had years ago is a cozy fleece. This full-zip is the perfect layering piece for those 'in-between' months when mother nature just can't make up her mind.&amp;nbsp;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Features:&lt;/div&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;100% polyester anti-pill yarn fleece.&lt;/li&gt;&lt;li&gt;100% polyester taffeta lining in sleeves.&lt;/li&gt;&lt;li&gt;Tricot-lined lower pockets with reverse coil zippers.&lt;/li&gt;&lt;li&gt;Available in purple with the white Google logo embroidered at left chest.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Please note! Sizing runs larger than normal. Consider ordering a size smaller than normal.&lt;/b&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;",
+            image: "../data/images/10-24101B.jpg",
+            largeImage: "../data/images/10-24101A.jpg"
+          },
+          quantity: 1,
+          size: "M"
+        }
+      ]
+
+      setup(function() {
+        cart = fixture('basic');
+      });
+
+      test('cart item lengths should be equal', function(done) {
+        // Set cart property
+        cart.cart = cartData;
+        // Data bindings will stamp out new DOM asynchronously
+        // so wait to check for updates
+        flush(function() {
+          var items = cart.shadowRoot.querySelectorAll('shop-cart-item');
+          assert.equal(Object.keys(cart.cart).length, items.length);
+          done();
+        });
+      });
+
+      test('total should render correctly', function(done) {
+        // Set total property
+        cart.total = 98.2;
+        // Data bindings will stamp out new DOM asynchronously
+        // so wait to check for updates
+        flush(function() {
+          var total = cart.shadowRoot.querySelector('.subtotal');
+          assert.equal(cart._formatTotal(cart.total), total.textContent, 'total should render correctly');
+          done();
+        });
+      });
+
+      test('quantity should render correctly', function(done) {
+        // Set cart property
+        cart.cart = cartData;
+        // Data bindings will stamp out new DOM asynchronously
+        // so wait to check for updates
+        flush(function() {
+          var quantity = cart.shadowRoot.querySelector('header').querySelector('span');
+          assert.equal('(' + cart._getPluralizedQuantity(cartData.length) + ')', quantity.textContent, 'quantity should render correctly');
+          done();
+        });
+      });
+
+      test('main section should have visible attribute when cart has items', function(done) {
+        // Set cart property
+        cart.cart = cartData;
+        // Data bindings will stamp out new DOM asynchronously
+        // so wait to check for updates
+        flush(function() {
+          var section = cart.shadowRoot.querySelectorAll('.subsection')[1];
+          assert.isTrue(section.hasAttribute('visible'), 'main section should have visible attribute when cart has items');
+          done();
+        });
+      });
+
+      test('main section should not have visible attribute when cart is empty', function(done) {
+        // Set cart property
+        cart.cart = [];
+        // Data bindings will stamp out new DOM asynchronously
+        // so wait to check for updates
+        flush(function() {
+          var section = cart.shadowRoot.querySelectorAll('.subsection')[1];
+          assert.isFalse(section.hasAttribute('visible'), 'main section should not have visible attribute when cart is empty');
+          done();
+        });
+      });
+
+      test('change-section event should fire', function(done) {
+        var listenerSpy = sinon.spy();
+        cart.addEventListener('change-section', listenerSpy);
+        // Set visible attribute
+        cart.setAttribute('visible', '');
+        flush(function() {
+          assert.isTrue(listenerSpy.called, 'should fire after attribute "visible" is set');
+          done();
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

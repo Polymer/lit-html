@@ -42,6 +42,8 @@ packages/lit/static-html.*
 packages/lit/lit.min.*
 packages/lit/polyfill-support.*
 
+packages/lit/smoke
+packages/lit/src/smoke
 packages/lit-element/decorators/
 packages/lit-element/demo/**/*.d.ts
 packages/lit-element/demo/**/*.d.ts.map

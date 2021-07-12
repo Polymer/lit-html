@@ -1,0 +1,173 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>shop-list</title>
+
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../node_modules/chai/chai.js"></script>
+  <script src="../node_modules/mocha/mocha.js"></script>
+  <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
+</head>
+<body>
+
+  <test-fixture id="basic">
+    <template>
+       <shop-list></shop-list>
+    </template>
+  </test-fixture>
+
+  <script type="module">
+    import '@polymer/test-fixture';
+    import sinon from 'sinon';
+    import '../src/shop-list.js';
+
+    suite('shop-list tests', function() {
+      var list;
+
+      var category = {
+        name: 'mens_outerwear',
+        title: "Men's Outerwear",
+        image: '../images/mens_outerwear.jpg',
+        items: [
+          {
+            name: "Men+s+Tech+Shell+Full-Zip",
+            title: "Men's Tech Shell Full-Zip",
+            category: "mens_outerwear",
+            price: 50.20,
+            description: "A versatile full-zip that you can wear all day long and even to the gym. This technical shell features moisture-wicking fabric, added stretch and a hidden pocket for your smartphone or media player.&amp;nbsp;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Features:&lt;/div&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;100% polyester.&lt;/li&gt;&lt;li&gt;Smooth, technical front with textured mesh back.&lt;/li&gt;&lt;li&gt;Drawstring bottom for adjustable fit.&lt;/li&gt;&lt;li&gt;Raglan sleeves.&lt;/li&gt;&lt;li&gt;Available in forest green with the white Google logo embroidered at left chest.&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;",
+            image: "../data/images/10-15068B.jpg",
+            largeImage: "../data/images/10-15068A.jpg"
+          }, {
+            name: "Anvil+L+S+Crew+Neck+-+Grey",
+            title: "Anvil L/S Crew Neck - Grey",
+            category: "mens_outerwear",
+            price: 22.15,
+            description: "You'll be swooning over this crew neck as soon as you feel how soft it is.&amp;nbsp;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Features:&lt;/div&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;40% preshrunk ring-spun cotton, 60% polyester terry fleece.&amp;nbsp;&lt;/li&gt;&lt;li&gt;Available in dark heather charcoal with the white Google logo screen printed across center chest.&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;",
+            image: "../data/images/10-14154B.jpg",
+            largeImage: "../data/images/10-14154A.jpg"
+          }, {
+            name: "Green+Flex+Fleece+Zip+Hoodie",
+            title: "Green Flex Fleece Zip Hoodie",
+            category: "mens_outerwear",
+            price: 45.65,
+            description: "Ultra soft. Ultra cozy. Our popular flex fleece hoodie now available in speckled green.&amp;nbsp;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Features:&lt;/div&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;50% cotton / 50% polyester.&amp;nbsp;&lt;/li&gt;&lt;li&gt;Made in the USA.&amp;nbsp;&lt;/li&gt;&lt;li&gt;Full-zip.&amp;nbsp;&lt;/li&gt;&lt;li&gt;Available in green with specks of blue and the white Google logo embroidered at left bicep.&amp;nbsp;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;",
+            image: "../data/images/10-14157B.jpg",
+            largeImage: "../data/images/10-14157A.jpg"
+          }
+        ]
+      };
+
+      setup(function() {
+        list = fixture('basic');
+      });
+
+      test('item lengths should be equal', function(done) {
+        // Set category property
+        list.category = category;
+        // Data bindings will stamp out new DOM asynchronously
+        // so wait to check for updates
+        flush(function() {
+          var items = list.shadowRoot.querySelector('.grid').querySelectorAll('shop-list-item');
+          assert.equal(list.category.items.length, items.length);
+          done();
+        });
+      });
+
+      test('hero image should be set', function(done) {
+        // Set category property
+        list.category = category;
+        // Data bindings will stamp out new DOM asynchronously
+        // so wait to check for updates
+        flush(function() {
+          var image = list.shadowRoot.querySelector('.hero-image');
+          assert.equal(list.category.image, image.src);
+          done();
+        });
+      });
+
+      test('title should render correctly', function(done) {
+        // Set category property
+        list.category = category;
+        // Data bindings will stamp out new DOM asynchronously
+        // so wait to check for updates
+        flush(function() {
+          var title = list.shadowRoot.querySelector('h1');
+          assert.equal(list.category.title, title.textContent);
+          done();
+        });
+      });
+
+      test('item count should render correctly', function(done) {
+        // Set category property
+        list.category = category;
+        // Data bindings will stamp out new DOM asynchronously
+        // so wait to check for updates
+        flush(function() {
+          var itemCounter = list.shadowRoot.querySelector('header').querySelector('span');
+          assert.equal(list._getPluralizedQuantity(list.category.items.length), itemCounter.textContent);
+          done();
+        });
+      });
+
+      test('failure should show shop-network-warning', function(done) {
+        var failureWarning = list.shadowRoot.querySelector('shop-network-warning');
+        // Set failure property
+        list.failure = false;
+        flush(function() {
+          assert.equal(getComputedStyle(failureWarning).display, 'none', 'shop-network-warning should be hidden when failure is false');
+          // Set failure property
+          list.failure = true;
+          // Data bindings will stamp out new DOM asynchronously
+          // so wait to check for updates
+          flush(function() {
+            assert.notEqual(getComputedStyle(failureWarning).display, 'none', 'shop-network-warning should not be hidden when failure is true');
+            done();
+          });
+        });
+      });
+
+      test('failure should hide grid', function(done) {
+        var grid = list.shadowRoot.querySelector('.grid');
+        // Set failure property
+        list.failure = false;
+        flush(function() {
+          assert.notEqual(getComputedStyle(grid).display, 'none', 'grid should not be hidden when failure is false');
+          // Set failure property
+          list.failure = true;
+          // Data bindings will stamp out new DOM asynchronously
+          // so wait to check for updates
+          flush(function() {
+            assert.equal(getComputedStyle(grid).display, 'none', 'grid should be hidden when failure is true');
+            done();
+          });
+        });
+      });
+
+      test('change-section event should fire', function(done) {
+        var listenerSpy = sinon.spy();
+        list.addEventListener('change-section', listenerSpy);
+        // Set category property
+        list.category = category;
+        // Set visible attribute
+        list.setAttribute('visible', '');
+        flush(function() {
+          assert.isTrue(listenerSpy.called, 'should fire after attribute "visible" is set');
+          done();
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
