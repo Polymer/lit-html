@@ -25,7 +25,7 @@ export interface StyleInfo {
 }
 
 class StyleMapDirective extends Directive {
-  _previousStyleProperties?: Set<string>;
+  _previousStyleProperties: Set<string> = new Set();
 
   constructor(partInfo: PartInfo) {
     super(partInfo);
@@ -61,16 +61,13 @@ class StyleMapDirective extends Directive {
     }, '');
   }
 
-  update(part: AttributePart, [styleInfo]: DirectiveParameters<this>) {
+  // The wider return type is only provided here so that one of the tests can
+  // extend this class and return a different type.
+  update(
+    part: AttributePart,
+    [styleInfo]: DirectiveParameters<this>
+  ): string | typeof noChange {
     const {style} = part.element as HTMLElement;
-
-    if (this._previousStyleProperties === undefined) {
-      this._previousStyleProperties = new Set();
-      for (const name in styleInfo) {
-        this._previousStyleProperties.add(name);
-      }
-      return this.render(styleInfo);
-    }
 
     // Remove old properties that no longer exist in styleInfo
     // We use forEach() instead of for-of so that re don't require down-level
