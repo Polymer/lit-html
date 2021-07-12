@@ -549,7 +549,7 @@ export abstract class ReactiveElement
    * @final
    * @category properties
    */
-  protected static getPropertyOptions(name: PropertyKey) {
+  static getPropertyOptions(name: PropertyKey) {
     return this.elementProperties.get(name) || defaultPropertyDeclaration;
   }
 
