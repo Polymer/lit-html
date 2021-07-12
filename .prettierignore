@@ -20,6 +20,11 @@ packages/benchmarks/**/*.d.ts.map
 packages/benchmarks/**/*.js
 packages/benchmarks/**/*.js.map
 
+packages/compiler/development/
+packages/compiler/node_modules/
+packages/compiler/test/
+packages/compiler/lib/
+
 packages/internal-scripts/node_modules/
 packages/internal-scripts/lib/
 

@@ -1125,6 +1125,8 @@ class ChildPart {
   }
 
   // Overridden via `litHtmlPlatformSupport` to provide platform support.
+  // TODO: patch this in even in core so that we can have a module w/o
+  // support for compiled templates
   /** @internal */
   _$getTemplate(result: TemplateResult) {
     let template = templateCache.get(result.strings);

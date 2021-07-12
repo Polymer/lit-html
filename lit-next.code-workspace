@@ -33,6 +33,10 @@
 			"path": "packages/localize"
 		},
 		{
+			"name": "compiler",
+			"path": "packages/compiler"
+		},
+		{
 			"name": "labs",
 			"path": "packages/labs"
 		},
