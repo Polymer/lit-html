@@ -17,10 +17,14 @@
   "scripts": {
     "build": "npm run clean && npm run build:ts",
     "build:ts": "tsc --build",
-    "clean": "rm -rf lib/"
+    "clean": "rm -rf lib/",
+    "test": "node --experimental-vm-modules ./lib/test/all-tests.js"
   },
   "dependencies": {
     "fast-glob": "^3.2.5",
     "typescript": "^4.2.3"
+  },
+  "devDependencies": {
+    "uvu": "^0.5.1"
   }
 }

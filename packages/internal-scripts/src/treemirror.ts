@@ -7,6 +7,7 @@
 import fastGlob from 'fast-glob';
 import * as fs from 'fs/promises';
 import * as pathlib from 'path';
+import {isSourceMap, writeAdjustedSourceMap} from './utils.js';
 
 const main = async () => {
   const [, , root, dest, ...globs] = process.argv;
@@ -31,7 +32,7 @@ EXAMPLES
   const dirs = new Set<string>();
   for (const original of matches) {
     const mirror = pathlib.resolve(dest, pathlib.relative(root, original));
-    mirrors.push({original, mirror});
+    mirrors.push({original: pathlib.normalize(original), mirror});
     dirs.add(pathlib.dirname(mirror));
   }
 
@@ -40,6 +41,10 @@ EXAMPLES
   await Promise.all(
     mirrors.map(async ({original, mirror}) => {
       // Overwrites by default.
+      if (isSourceMap(original)) {
+        await writeAdjustedSourceMap(original, mirror);
+        return;
+      }
       await fs.copyFile(original, mirror);
     })
   );
