@@ -109,6 +109,14 @@ export const getWindow = ({
         observedAttributes:
           (ctor as CustomHTMLElement).observedAttributes ?? [],
       });
+      function localName() {
+        return name;
+      }
+      Object.defineProperty(ctor.prototype, 'localName', {
+        configurable: true,
+        enumerable: true,
+        get: localName,
+      });
     }
 
     get(name: string) {
